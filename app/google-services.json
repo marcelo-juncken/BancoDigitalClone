@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "651732445211",
+    "project_id": "banco-digital-801b7",
+    "storage_bucket": "banco-digital-801b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651732445211:android:3c2292b0e126e1dd5670be",
+        "android_client_info": {
+          "package_name": "com.example.bancodigital"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651732445211-7it1u5l2fnsfrhuoia49o8lnkerlt5os.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bancodigital",
+            "certificate_hash": "fc05ba1bd475b2e4591227172156c06ff4618aa1"
+          }
+        },
+        {
+          "client_id": "651732445211-bo18ms09i5lb4kops89ctcudauus8egk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQPru0AH-WBxXHzc_uKPNM2F7NcGjWHyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651732445211-bo18ms09i5lb4kops89ctcudauus8egk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
