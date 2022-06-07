@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.bancodigital.MainActivity;
+import com.example.bancodigital.app.MainActivity;
 import com.example.bancodigital.R;
 import com.example.bancodigital.helper.FirebaseHelper;
 

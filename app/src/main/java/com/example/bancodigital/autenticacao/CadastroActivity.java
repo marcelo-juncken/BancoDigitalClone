@@ -10,11 +10,10 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.bancodigital.MainActivity;
+import com.example.bancodigital.app.MainActivity;
 import com.example.bancodigital.R;
 import com.example.bancodigital.helper.FirebaseHelper;
 import com.example.bancodigital.model.Usuario;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
 public class CadastroActivity extends AppCompatActivity {

@@ -14,9 +14,12 @@
         android:theme="@style/Theme.BancoDigital"
         tools:targetApi="31">
         <activity
+            android:name=".deposito.DepositoFormActivity"
+            android:exported="false" />
+        <activity
             android:name=".app.SplashActivity"
-            android:theme="@style/Theme.Splash"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,12 +31,12 @@
             android:exported="false" />
         <activity
             android:name=".autenticacao.LoginActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".autenticacao.CadastroActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name=".app.MainActivity"
             android:exported="true" />
     </application>
 
