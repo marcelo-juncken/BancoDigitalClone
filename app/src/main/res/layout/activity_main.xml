@@ -5,14 +5,95 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
+    android:padding="16dp"
     tools:context=".app.MainActivity">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:cardCornerRadius="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/loading" />
+    </androidx.cardview.widget.CardView>
+
+    <ImageButton
+        android:id="@+id/ibNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_notifications"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Meu saldo"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+    <TextView
+        android:id="@+id/textSaldo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:text="R$ 500,00" />
+
+    <TextView
+        android:id="@+id/textAtividades"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSaldo"
+        android:text="Últimas 6 atividades" />
+
+    <TextView
+        android:id="@+id/textVerTodas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textAtividades"
+        android:text="Ver todas" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textAtividades" />
+
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:fillViewport="true"
         android:scrollbarThumbHorizontal="@null"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -26,176 +107,207 @@
                 android:id="@+id/cardDeposito"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:cardCornerRadius="10dp"
-                app:cardBackgroundColor="@color/white"
                 android:layout_marginVertical="8dp"
-                android:layout_marginStart="24dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:src="@drawable/ic_deposito"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_deposito" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Depositar"
-                    android:textColor="@android:color/black"
                     android:layout_gravity="bottom"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:text="Depositar"
+                    android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardRecarga"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:cardCornerRadius="10dp"
-                app:cardBackgroundColor="@color/white"
                 android:layout_marginVertical="8dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:src="@drawable/ic_recarga_cel"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_recarga_cel" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Recarga de celular"
-                    android:textColor="@android:color/black"
                     android:layout_gravity="bottom"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:text="Recarga de celular"
+                    android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardExtrato"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:cardCornerRadius="10dp"
-                app:cardBackgroundColor="@color/white"
                 android:layout_marginVertical="8dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:src="@drawable/ic_historico"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_historico" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Extrato"
-                    android:textColor="@android:color/black"
                     android:layout_gravity="bottom"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:text="Extrato"
+                    android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardTransferir"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:cardCornerRadius="10dp"
-                app:cardBackgroundColor="@color/white"
                 android:layout_marginVertical="8dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:src="@drawable/ic_transferir"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_transferir" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Transferir"
-                    android:textColor="@android:color/black"
                     android:layout_gravity="bottom"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:text="Transferir"
+                    android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardReceber"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:cardCornerRadius="10dp"
-                app:cardBackgroundColor="@color/white"
                 android:layout_marginVertical="8dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:src="@drawable/ic_cobrar"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_cobrar" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Receber"
-                    android:textColor="@android:color/black"
                     android:layout_gravity="bottom"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:text="Receber"
+                    android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardMinhaConta"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:cardCornerRadius="10dp"
-                app:cardBackgroundColor="@color/white"
                 android:layout_marginVertical="8dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:src="@drawable/ic_user_black"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_user_black" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Minha conta"
-                    android:textColor="@android:color/black"
                     android:layout_gravity="bottom"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:text="Minha conta"
+                    android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardDeslogar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                app:cardCornerRadius="10dp"
-                app:cardBackgroundColor="@color/white"
+                android:layout_marginStart="12dp"
                 android:layout_marginVertical="8dp"
-                android:layout_marginHorizontal="24dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:src="@drawable/ic_sair"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_sair" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sair"
-                    android:textColor="@android:color/black"
                     android:layout_gravity="bottom"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="8dp"
+                    android:text="Sair"
+                    android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>
     </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cardView2">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Carregando..."
+            android:textAlignment="center" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

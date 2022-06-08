@@ -43,16 +43,28 @@
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
-            <EditText
+            <com.blackcat.currencyedittext.CurrencyEditText
                 android:id="@+id/editValor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="24dp"
                 android:layout_marginHorizontal="24dp"
+                android:theme="@style/Theme.EditText"
+                android:layout_marginTop="24dp"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textStyle="bold"
                 android:backgroundTint="@color/white"
-                android:hint="R$ 100,00"
                 android:textColor="@color/white"
                 android:textColorHint="@color/colorTextHint" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:theme="@style/Theme.ProgressBar"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </LinearLayout>
     </ScrollView>
@@ -61,11 +73,11 @@
         android:id="@+id/btnConfirmar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="24dp"
         android:background="@drawable/bg_edit"
         android:text="Confirmar"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
-        android:layout_margin="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
