@@ -3,19 +3,15 @@ package com.example.bancodigital.model;
 import com.example.bancodigital.helper.FirebaseHelper;
 import com.google.firebase.database.DatabaseReference;
 
-import java.io.Serializable;
-
-public class Extrato implements Serializable {
-
+public class Transferencia {
     private String id;
-    private String operacao;
+    private String idUserOrigem;
+    private String idUserDestino;
     private long data;
     private double valor;
-    private String tipo;
 
-    public Extrato() {
-        DatabaseReference extratoRef = FirebaseHelper.getDatabaseReference();
-        setId(extratoRef.push().getKey());
+    public Transferencia() {
+
     }
 
     public String getId() {
@@ -26,12 +22,20 @@ public class Extrato implements Serializable {
         this.id = id;
     }
 
-    public String getOperacao() {
-        return operacao;
+    public String getIdUserOrigem() {
+        return idUserOrigem;
     }
 
-    public void setOperacao(String operacao) {
-        this.operacao = operacao;
+    public void setIdUserOrigem(String idUserOrigem) {
+        this.idUserOrigem = idUserOrigem;
+    }
+
+    public String getIdUserDestino() {
+        return idUserDestino;
+    }
+
+    public void setIdUserDestino(String idUserDestino) {
+        this.idUserDestino = idUserDestino;
     }
 
     public long getData() {
@@ -48,13 +52,5 @@ public class Extrato implements Serializable {
 
     public void setValor(double valor) {
         this.valor = valor;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 }

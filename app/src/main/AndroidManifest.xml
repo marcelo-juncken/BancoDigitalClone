@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.bancodigital">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +16,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BancoDigital"
         tools:targetApi="31">
+        <activity
+            android:name=".transferencia.TransferenciaReciboActivity"
+            android:exported="false" />
+        <activity
+            android:name=".transferencia.TransferenciaConfirmaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".transferencia.TransferirUsuarioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".transferencia.TransferenciaFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".recarga.RecargaReciboActivity"
+            android:exported="false" />
+        <activity
+            android:name=".recarga.RecargaFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".usuario.MinhaContaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BancoDigital2" />
         <activity
             android:name=".deposito.DepositoReciboActivity"
             android:exported="false" />
@@ -31,13 +56,16 @@
         </activity>
         <activity
             android:name=".autenticacao.RecuperarContaActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Autenticacao" />
         <activity
             android:name=".autenticacao.LoginActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.Autenticacao" />
         <activity
             android:name=".autenticacao.CadastroActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.Autenticacao" />
         <activity
             android:name=".app.MainActivity"
             android:exported="true" />

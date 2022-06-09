@@ -1,4 +1,4 @@
-package com.example.bancodigital.deposito;
+package com.example.bancodigital.recarga;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -9,71 +9,81 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blackcat.currencyedittext.CurrencyEditText;
 import com.example.bancodigital.R;
 import com.example.bancodigital.helper.FirebaseHelper;
-import com.example.bancodigital.model.Deposito;
 import com.example.bancodigital.model.Extrato;
+import com.example.bancodigital.model.Recarga;
 import com.example.bancodigital.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.santalu.maskara.widget.MaskEditText;
 
 import java.util.Locale;
 
-public class DepositoFormActivity extends AppCompatActivity {
+public class RecargaFormActivity extends AppCompatActivity {
 
     private CurrencyEditText editValor;
+    private MaskEditText editTelefone;
     private AlertDialog dialog;
     private ProgressBar progressBar;
 
     private Usuario usuario;
+
+    private String telefone;
 
     private Button btnConfirmar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_deposito_form);
+        setContentView(R.layout.activity_recarga_form);
 
-        recuperaUsuario();
         iniciaComponentes();
-
         configToolbar();
         configCliques();
+        recuperaUsuario();
     }
 
 
-    private void validaDeposito() {
-        double valorDeposito = (double) editValor.getRawValue() / 100;
+    private void validaRecarga() {
+        double valorRecarga = (double) editValor.getRawValue() / 100;
+        telefone = editTelefone.getMasked();
 
-        if (valorDeposito > 0) {
-            ocultarTeclado();
-
-            if (usuario != null) {
-                progressBar.setVisibility(View.VISIBLE);
-                btnConfirmar.setEnabled(false);
-                salvarExtrato(valorDeposito);
-            }else{
-                showDialog("Atenção", "Usuário não reconhecido. Tente novamente mais tarde.");
+        if (valorRecarga >= 15) {
+            if (editTelefone.isDone()) {
+                ocultarTeclado();
+                if (usuario != null) {
+                    if (usuario.getSaldo() - valorRecarga >= 0) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        btnConfirmar.setEnabled(false);
+                        salvarExtrato(valorRecarga);
+                    } else {
+                        showDialog("Atenção", "Não há saldo suficiente.");
+                    }
+                } else {
+                    showDialog("Atenção", "Usuário não reconhecido. Tente novamente mais tarde.");
+                }
+            } else {
+                showDialog("Atenção", "Insira o número para a recarga");
             }
         } else {
-            showDialog("Atenção", "Digite um valor maior que 0.");
+            showDialog("Atenção", "O valor mínimo para realizar a recarga é de R$ 15,00");
         }
     }
 
-    private void salvarExtrato(double valorDeposito) {
+    private void salvarExtrato(double valorRecarga) {
         Extrato extrato = new Extrato();
-        extrato.setValor(valorDeposito);
-        extrato.setOperacao("DEPOSITO");
-        extrato.setTipo("ENTRADA");
-
+        extrato.setValor(valorRecarga);
+        extrato.setOperacao("RECARGA");
+        extrato.setTipo("SAIDA");
 
         DatabaseReference extratoRef = FirebaseHelper.getDatabaseReference()
                 .child("extratos")
@@ -81,42 +91,41 @@ public class DepositoFormActivity extends AppCompatActivity {
                 .child(extrato.getId());
         extratoRef.setValue(extrato).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-
                 extratoRef.child("data").setValue(ServerValue.TIMESTAMP);
-                salvarDeposito(extrato);
-
+                salvarRecarga(extrato);
             } else {
-                showDialog("Atenção", "Não foi possível efetuar o depósito. Tente mais tarde.");
-                btnConfirmar.setEnabled(true);
+                btnConfirmar.setEnabled(false);
+                showDialog("Atenção", "Não foi possível efetuar a recarga. Tente mais tarde.");
             }
         });
 
 
     }
 
-    private void salvarDeposito(Extrato extrato) {
+    private void salvarRecarga(Extrato extrato) {
 
-        Deposito deposito = new Deposito();
-        deposito.setValor(extrato.getValor());
-        deposito.setId(extrato.getId());
+        Recarga recarga = new Recarga();
+        recarga.setValor(extrato.getValor());
+        recarga.setId(extrato.getId());
+        recarga.setNumero(telefone);
 
-        DatabaseReference depositoRef = FirebaseHelper.getDatabaseReference()
-                .child("depositos")
+        DatabaseReference recargaRef = FirebaseHelper.getDatabaseReference()
+                .child("recargas")
                 .child(extrato.getId());
 
-        depositoRef.setValue(deposito).addOnCompleteListener(task -> {
+        recargaRef.setValue(recarga).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                depositoRef.child("data").setValue(ServerValue.TIMESTAMP);
+                recargaRef.child("data").setValue(ServerValue.TIMESTAMP);
 
-                usuario.setSaldo(usuario.getSaldo() + extrato.getValor());
+                usuario.setSaldo(usuario.getSaldo() - extrato.getValor());
                 usuario.atualizarSaldo();
 
-                Intent intent = new Intent(this, DepositoReciboActivity.class);
-                intent.putExtra("idDeposito", deposito.getId());
+                Intent intent = new Intent(this, RecargaReciboActivity.class);
+                intent.putExtra("idRecarga", recarga.getId());
                 finish();
                 startActivity(intent);
             } else {
-                showDialog("Atenção", "Não foi possível efetuar o depósito. Tente mais tarde.");
+                showDialog("Atenção", "Não foi possível efetuar a recarga. Tente mais tarde.");
                 btnConfirmar.setEnabled(true);
             }
             progressBar.setVisibility(View.GONE);
@@ -133,6 +142,8 @@ public class DepositoFormActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         usuario = snapshot.getValue(Usuario.class);
+                    } else {
+
                     }
                 }
 
@@ -167,7 +178,7 @@ public class DepositoFormActivity extends AppCompatActivity {
     }
 
     private void configCliques() {
-        btnConfirmar.setOnClickListener(v -> validaDeposito());
+        btnConfirmar.setOnClickListener(v -> validaRecarga());
     }
 
     private void ocultarTeclado() {
@@ -178,17 +189,16 @@ public class DepositoFormActivity extends AppCompatActivity {
 
     private void iniciaComponentes() {
         progressBar = findViewById(R.id.progressBar);
-        btnConfirmar = findViewById(R.id.btnConfirmar);
         editValor = findViewById(R.id.editValor);
         editValor.setLocale(new Locale("PT", "br"));
+        editTelefone = findViewById(R.id.editTelefone);
+        btnConfirmar = findViewById(R.id.btnConfirmar);
     }
 
     private void configToolbar() {
         TextView text_titulo = findViewById(R.id.text_titulo);
-        text_titulo.setText("Depositar");
+        text_titulo.setText("Recarga");
 
         findViewById(R.id.ib_voltar).setOnClickListener(v -> finish());
     }
-
-
 }

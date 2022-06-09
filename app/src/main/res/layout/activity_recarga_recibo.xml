@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".deposito.DepositoReciboActivity">
+    tools:context=".recarga.RecargaReciboActivity">
 
 
     <include
@@ -27,24 +27,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="24dp">
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
                 android:gravity="center_horizontal"
+                android:text="Recarga efetuada\n com sucesso!"
                 android:textColor="@color/colorRecibo"
-                android:text="Depósito efetuado\n com sucesso!" />
+                android:textSize="24sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:text="Seu depósito ficará disponível em até 3 dias úteis." />
+                android:gravity="center_horizontal"
+                android:text="Seu crédito estará disponível em alguns minutos." />
 
             <TextView
                 android:layout_width="match_parent"
@@ -61,55 +61,83 @@
                 tools:text="-MEiz1lUiLlLkckKSA8" />
 
             <include
+                layout="@layout/divisor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                layout="@layout/divisor"/>
+                android:layout_marginTop="16dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Data depósito"/>
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Valor depósito"/>
+                        android:layout_weight="1"
+                        android:text="Data recarga" />
+
+                    <TextView
+                        android:id="@+id/textData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd"
+                        tools:text="31/12/2022 10:35" />
+
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:orientation="vertical">
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+
                     <TextView
-                        android:id="@+id/textData"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:text="31/12/2022 10:35"/>
+                        android:layout_weight="1"
+                        android:text="Valor recarga" />
 
                     <TextView
                         android:id="@+id/textValor"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        tools:text="R$ 500,00"/>
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd"
+                        tools:text="R$ 500,00" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Número" />
+
+                    <TextView
+                        android:id="@+id/textTelefone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd"
+                        tools:text="(99) 99999 9999" />
                 </LinearLayout>
 
             </LinearLayout>
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
@@ -119,14 +147,15 @@
                 android:indeterminateTint="@color/colorPrimary" />
         </LinearLayout>
     </ScrollView>
+
     <Button
         android:id="@+id/btnConfirmar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
         android:background="@drawable/bg_btn"
-        android:text="OK"
         android:backgroundTint="@color/colorPrimary"
+        android:text="OK"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
