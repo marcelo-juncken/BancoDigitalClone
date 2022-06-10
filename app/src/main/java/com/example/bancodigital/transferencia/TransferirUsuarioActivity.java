@@ -36,7 +36,7 @@ public class TransferirUsuarioActivity extends AppCompatActivity implements Usua
 
     private final List<Usuario> usuarioListCompleta = new ArrayList<>();
     private final List<Usuario> usuarioListFiltro = new ArrayList<>();
-    private List<Usuario> usuarioListAdapter = new ArrayList<>();
+    private final List<Usuario> usuarioListAdapter = new ArrayList<>();
 
     private EditText searchView;
     private ImageButton ibClose;

@@ -19,6 +19,7 @@ import com.example.bancodigital.helper.FirebaseHelper;
 import com.example.bancodigital.helper.GetMask;
 import com.example.bancodigital.model.Deposito;
 import com.example.bancodigital.model.Extrato;
+import com.example.bancodigital.model.Notificacao;
 import com.example.bancodigital.model.Transferencia;
 import com.example.bancodigital.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
@@ -39,9 +40,11 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
     private Usuario usuarioDestino;
     private double valorTransferencia;
 
-    private Transferencia transferencia;
-
     private AlertDialog dialog;
+
+    private final Transferencia transferencia = new Transferencia();
+
+    private String transferenciaOrigem;
 
 
     @Override
@@ -61,6 +64,15 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
         recuperaUsuario();
     }
 
+    private void enviaNotificacao(String idOperacao){
+        Notificacao notificacao = new Notificacao();
+        notificacao.setOperacao("TRANSFERENCIA");
+        notificacao.setIdDestinatario(usuarioDestino.getId());
+        notificacao.setIdRemetente(usuarioOrigem.getId());
+        notificacao.setIdOperacao(idOperacao);
+        notificacao.enviar();
+    }
+
     private void recuperaUsuario() {
         if (FirebaseHelper.getAutenticado()) {
             DatabaseReference usuarioRef = FirebaseHelper.getDatabaseReference()
@@ -72,37 +84,59 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
                     if (snapshot.exists()) {
                         usuarioOrigem = snapshot.getValue(Usuario.class);
                     } else {
-
+                        showDialog("Atenção", "Erro com a conexão do servidor.");
+                        btnConfirmar.setEnabled(false);
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    showDialog("Atenção", "Erro com a conexão do servidor.");
+                    btnConfirmar.setEnabled(false);
                 }
             });
+        } else {
+            showDialog("Atenção", "Erro na autenticação com o servidor. Tente novamente mais tarde");
+            btnConfirmar.setEnabled(false);
         }
     }
 
-    private void salvarExtratoUsuarioOrigem() {
-        Extrato extratoUsuarioOrigem = new Extrato();
-        extratoUsuarioOrigem.setValor(valorTransferencia);
-        extratoUsuarioOrigem.setOperacao("TRANSFERENCIA");
-        extratoUsuarioOrigem.setTipo("SAIDA");
-        String idTransferencia = extratoUsuarioOrigem.getId();
+    private void salvaInformacoes() {
+        if (usuarioOrigem.getSaldo() >= valorTransferencia) {
+            btnConfirmar.setEnabled(false);
+
+            transferencia.setIdUserOrigem(usuarioOrigem.getId());
+            transferencia.setIdUserDestino(usuarioDestino.getId());
+            transferencia.setValor(valorTransferencia);
+
+            salvarExtrato(usuarioOrigem, "SAIDA");
+            salvarExtrato(usuarioDestino, "ENTRADA");
+        } else {
+            showDialog("Atenção", "Não há saldo suficiente.");
+        }
+    }
+
+    private void salvarExtrato(Usuario usuario, String tipo) {
+        Extrato extrato = new Extrato();
+        extrato.setValor(valorTransferencia);
+        extrato.setOperacao("TRANSFERENCIA");
+        extrato.setTipo(tipo);
 
         DatabaseReference extratoRef = FirebaseHelper.getDatabaseReference()
                 .child("extratos")
-                .child(FirebaseHelper.getIdFirebase())
-                .child(idTransferencia);
-        extratoRef.setValue(extratoUsuarioOrigem).addOnCompleteListener(task -> {
+                .child(usuario.getId())
+                .child(extrato.getId());
+        extratoRef.setValue(extrato).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
 
                 extratoRef.child("data").setValue(ServerValue.TIMESTAMP);
-                salvarTransferencia(idTransferencia);
+
+                if (tipo.equals("SAIDA")) transferenciaOrigem = extrato.getId();
+
+                salvarTransferencia(extrato);
 
             } else {
-                showDialog("Atenção", "Não foi possível efetuar a transferência. Tente mais tarde.");
+                showDialog("Atenção", "Erro ao salvar o extrato, contate um administrador.");
                 btnConfirmar.setEnabled(true);
             }
         });
@@ -110,69 +144,37 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
 
     }
 
-    private void salvarTransferencia(String idTransferencia) {
-
-        transferencia = new Transferencia();
-        transferencia.setValor(valorTransferencia);
-        transferencia.setIdUserOrigem(usuarioOrigem.getId());
-        transferencia.setIdUserDestino(usuarioDestino.getId());
-        transferencia.setId(idTransferencia);
+    private void salvarTransferencia(Extrato extrato) {
+        transferencia.setId(extrato.getId());
 
         DatabaseReference transferenciaRef = FirebaseHelper.getDatabaseReference()
                 .child("transferencias")
-                .child(idTransferencia);
+                .child(extrato.getId());
 
         transferenciaRef.setValue(transferencia).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 transferenciaRef.child("data").setValue(ServerValue.TIMESTAMP);
 
-                usuarioOrigem.setSaldo(usuarioOrigem.getSaldo() - valorTransferencia);
-                usuarioOrigem.atualizarSaldo();
+                if (extrato.getTipo().equals("SAIDA")) {
+                    usuarioOrigem.setSaldo(usuarioOrigem.getSaldo() - valorTransferencia);
+                    usuarioOrigem.atualizarSaldo();
+                } else if (extrato.getTipo().equals("ENTRADA")) {
+                    usuarioDestino.setSaldo(usuarioDestino.getSaldo() + valorTransferencia);
+                    usuarioDestino.atualizarSaldo();
 
-                salvarExtratoUsuarioDestino(idTransferencia);
+                    enviaNotificacao(extrato.getId());
+
+                    Intent intent = new Intent(this, TransferenciaReciboActivity.class);
+                    intent.putExtra("usuarioSelecionado", usuarioDestino);
+                    intent.putExtra("idTransferencia", transferenciaOrigem);
+                    startActivityForResult(intent, REQUEST_TRANSFERENCIA);
+                }
 
             } else {
-                showDialog("Atenção", "Não foi possível efetuar a transferência. Tente mais tarde.");
+                showDialog("Atenção", "Erro ao salvar a transferência, contate um administrador");
             }
 
         });
-    }
-
-    private void salvarExtratoUsuarioDestino(String idTransferencia) {
-        Extrato extratoUsuarioDestino = new Extrato();
-        extratoUsuarioDestino.setValor(valorTransferencia);
-        extratoUsuarioDestino.setOperacao("TRANSFERENCIA");
-        extratoUsuarioDestino.setTipo("ENTRADA");
-        extratoUsuarioDestino.setId(idTransferencia);
-
-
-        DatabaseReference extratoRef = FirebaseHelper.getDatabaseReference()
-                .child("extratos")
-                .child(usuarioDestino.getId())
-                .child(idTransferencia);
-        extratoRef.setValue(extratoUsuarioDestino).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-
-                extratoRef.child("data").setValue(ServerValue.TIMESTAMP);
-
-
-                usuarioDestino.setSaldo(usuarioDestino.getSaldo() + valorTransferencia);
-                usuarioDestino.atualizarSaldo();
-
-
-                Intent intent = new Intent(this, TransferenciaReciboActivity.class);
-                intent.putExtra("usuarioSelecionado", usuarioDestino);
-                intent.putExtra("idTransferencia", idTransferencia);
-                startActivityForResult(intent, REQUEST_TRANSFERENCIA);
-                btnConfirmar.setEnabled(true);
-
-            } else {
-                showDialog("Atenção", "Não foi possível efetuar a transferência. Tente mais tarde.");
-                btnConfirmar.setEnabled(true);
-            }
-        });
-
-
     }
 
 
@@ -212,13 +214,9 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
     }
 
     private void configCliques() {
-        btnConfirmar.setOnClickListener(v -> {
-            if (usuarioOrigem.getSaldo() - valorTransferencia >= 0) {
-                btnConfirmar.setEnabled(false);
-                salvarExtratoUsuarioOrigem();
-            }
-        });
+        btnConfirmar.setOnClickListener(v -> salvaInformacoes());
     }
+
 
     private void configToolbar() {
         TextView text_titulo = findViewById(R.id.text_titulo);
@@ -238,8 +236,8 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK){
-            if(requestCode == REQUEST_TRANSFERENCIA){
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_TRANSFERENCIA) {
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

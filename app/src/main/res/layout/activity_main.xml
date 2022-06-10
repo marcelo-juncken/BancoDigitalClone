@@ -8,6 +8,8 @@
     android:padding="16dp"
     tools:context=".app.MainActivity">
 
+
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="70dp"
@@ -25,16 +27,40 @@
             android:src="@drawable/loading" />
     </androidx.cardview.widget.CardView>
 
-    <ImageButton
-        android:id="@+id/ibNotification"
+
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_notifications"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/textNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_notificacao"
+            android:elevation="1dp"
+            android:paddingHorizontal="5dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="1"
+            tools:visibility="visible" />
+
+
+        <ImageButton
+            android:id="@+id/ibNotification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_notifications" />
+
+
+    </FrameLayout>
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -86,7 +112,13 @@
         app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textAtividades" />
+        app:layout_constraintTop_toBottomOf="@+id/textAtividades">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvExtrato"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </androidx.cardview.widget.CardView>
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"

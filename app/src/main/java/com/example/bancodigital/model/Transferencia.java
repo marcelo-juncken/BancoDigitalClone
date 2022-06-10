@@ -3,7 +3,9 @@ package com.example.bancodigital.model;
 import com.example.bancodigital.helper.FirebaseHelper;
 import com.google.firebase.database.DatabaseReference;
 
-public class Transferencia {
+import java.io.Serializable;
+
+public class Transferencia implements Serializable {
     private String id;
     private String idUserOrigem;
     private String idUserDestino;
@@ -11,8 +13,10 @@ public class Transferencia {
     private double valor;
 
     public Transferencia() {
-
+        DatabaseReference transferenciaRef = FirebaseHelper.getDatabaseReference();
+        setId(transferenciaRef.push().getKey());
     }
+
 
     public String getId() {
         return id;

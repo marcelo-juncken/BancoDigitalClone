@@ -101,6 +101,7 @@ public class TransferenciaReciboActivity extends AppCompatActivity {
         }
 
         textCodigo.setText(idTransferencia);
+        textUser.setText(usuario.getNome());
         textData.setText(GetMask.getDate(transferencia.getData(), 3));
         textValor.setText(getString(R.string.valor, GetMask.getValor(transferencia.getValor())));
         progressBar.setVisibility(View.GONE);
