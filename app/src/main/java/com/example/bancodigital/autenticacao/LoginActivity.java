@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -46,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (!email.isEmpty()) {
             if (!senha.isEmpty()) {
+                ocultarTeclado();
                 progressBar.setVisibility(View.VISIBLE);
                 logar(email,senha);
             } else {
@@ -73,6 +75,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
+    private void ocultarTeclado() {
+        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                edit_email.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS
+        );
+    }
 
     private void iniciaComponentes() {
         edit_email = findViewById(R.id.edit_email);

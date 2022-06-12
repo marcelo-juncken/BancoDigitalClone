@@ -4,7 +4,9 @@ import com.example.bancodigital.helper.FirebaseHelper;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ServerValue;
 
-public class Notificacao {
+import java.io.Serializable;
+
+public class Notificacao implements Serializable {
     private String id;
     private String idRemetente;
     private String idDestinatario;
@@ -28,6 +30,25 @@ public class Notificacao {
                 notificacaoRef.child("data").setValue(ServerValue.TIMESTAMP);
             }
         });
+    }
+
+    public void switchNotificacao(){
+        DatabaseReference notificacaoRef = FirebaseHelper.getDatabaseReference()
+                .child("notificacoes")
+                .child(FirebaseHelper.getIdFirebase())
+                .child(getId())
+                .child("lida");
+        notificacaoRef.setValue(!isLida());
+
+    }
+
+
+    public void deletar() {
+        DatabaseReference notificacaoRef = FirebaseHelper.getDatabaseReference()
+                .child("notificacoes")
+                .child(FirebaseHelper.getIdFirebase())
+                .child(getId());
+        notificacaoRef.removeValue();
     }
 
     public String getId() {
@@ -85,4 +106,5 @@ public class Notificacao {
     public void setLida(boolean lida) {
         this.lida = lida;
     }
+
 }

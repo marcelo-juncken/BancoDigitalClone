@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -32,6 +33,7 @@ public class RecuperarContaActivity extends AppCompatActivity {
         String email = edit_email.getText().toString().trim();
         
         if (!email.isEmpty()){
+            ocultarTeclado();
             progressBar.setVisibility(View.VISIBLE);
             recuperaConta(email);
         }else{
@@ -51,6 +53,12 @@ public class RecuperarContaActivity extends AppCompatActivity {
                    }
             progressBar.setVisibility(View.GONE);
                 });
+    }
+
+    private void ocultarTeclado() {
+        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                edit_email.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS
+        );
     }
 
     private void configCliques() {

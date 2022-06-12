@@ -48,12 +48,14 @@ public class RecargaReciboActivity extends AppCompatActivity {
             DatabaseReference recargaRef = FirebaseHelper.getDatabaseReference()
                     .child("recargas")
                     .child(idRecarga);
-            recargaRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            recargaRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         Recarga recarga = snapshot.getValue(Recarga.class);
-                        config(recarga);
+                        if (recarga != null) {
+                            config(recarga);
+                        }
                     } else {
                         progressBar.setVisibility(View.GONE);
                     }

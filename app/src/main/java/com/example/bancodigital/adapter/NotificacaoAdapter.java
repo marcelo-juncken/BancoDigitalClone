@@ -104,7 +104,8 @@ public class NotificacaoAdapter extends RecyclerView.Adapter<NotificacaoAdapter.
                     if (snapshot.exists()) {
                         Usuario usuario = snapshot.getValue(Usuario.class);
                         if (usuario != null) {
-                            holder.textEmitente.setText(String.format("Enviada por %s", usuario.getNome()));
+                            String terminacao = notificacao.getOperacao().substring(notificacao.getOperacao().length() - 1).toLowerCase();
+                            holder.textEmitente.setText(String.format("Enviad%s por %s", terminacao ,usuario.getNome()));
                         }
                     }
                 }

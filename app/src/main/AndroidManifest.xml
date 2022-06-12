@@ -17,6 +17,20 @@
         android:theme="@style/Theme.BancoDigital"
         tools:targetApi="31">
         <activity
+            android:name=".cobranca.CobrancaReciboActivity"
+            android:theme="@style/Theme.BancoDigital3"
+            android:exported="false" />
+        <activity
+            android:name=".cobranca.PagarCobrancaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".cobranca.CobrancaConfirmaActivity"
+            android:theme="@style/Theme.BancoDigital3"
+            android:exported="false" />
+        <activity
+            android:name=".cobranca.CobrancaFormActivity"
+            android:exported="false" />
+        <activity
             android:name=".notificacoes.NotificacoesActivity"
             android:exported="false" />
         <activity
@@ -24,18 +38,22 @@
             android:exported="false" />
         <activity
             android:name=".transferencia.TransferenciaReciboActivity"
+            android:theme="@style/Theme.BancoDigital3"
             android:exported="false" />
         <activity
             android:name=".transferencia.TransferenciaConfirmaActivity"
+            android:theme="@style/Theme.BancoDigital3"
             android:exported="false" />
         <activity
-            android:name=".transferencia.TransferirUsuarioActivity"
+            android:name=".transferencia.SelecionarUsuarioActivity"
+            android:theme="@style/Theme.BancoDigital3"
             android:exported="false" />
         <activity
             android:name=".transferencia.TransferenciaFormActivity"
             android:exported="false" />
         <activity
             android:name=".recarga.RecargaReciboActivity"
+            android:theme="@style/Theme.BancoDigital3"
             android:exported="false" />
         <activity
             android:name=".recarga.RecargaFormActivity"
@@ -46,6 +64,7 @@
             android:theme="@style/Theme.BancoDigital2" />
         <activity
             android:name=".deposito.DepositoReciboActivity"
+            android:theme="@style/Theme.BancoDigital3"
             android:exported="false" />
         <activity
             android:name=".deposito.DepositoFormActivity"

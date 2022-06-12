@@ -19,6 +19,7 @@
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2455" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/drawable/ic_logo.xml" value="0.1025" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/drawable/ic_recarga_cel.xml" value="0.1025" />
+        <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/drawable/ic_remove.xml" value="0.2805" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/drawable/ic_sair.xml" value="0.1025" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/drawable/ic_senha_login.xml" value="0.2455" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/drawable/ic_transferir.xml" value="0.1025" />
@@ -26,6 +27,9 @@
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/drawable/ic_user_black.xml" value="0.1025" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/drawable/ic_user_blue.xml" value="0.2455" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_cadastro.xml" value="0.33" />
+        <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_cobranca_confirma.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_cobranca_form.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_cobranca_recibo.xml" value="0.35260416666666666" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_deposito_form.xml" value="0.25" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_deposito_recibo.xml" value="0.33" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_extrato.xml" value="0.36666666666666664" />
@@ -33,9 +37,11 @@
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_minha_conta.xml" value="0.25" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_notificacoes.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_pagar_cobranca.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_recarga_form.xml" value="0.33" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_recarga_recibo.xml" value="0.33" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_recuperar_conta.xml" value="0.27708333333333335" />
+        <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_selecionar_usuario.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_splash.xml" value="0.2703125" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_transferencia_confirma.xml" value="0.33" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/activity_transferencia_form.xml" value="0.33" />
@@ -46,6 +52,7 @@
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/adapter_usuario.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/divisor.xml" value="0.275" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/fragment_teste.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/layout_dialog_delete.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/layout_dialog_info.xml" value="0.3125" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/toolbar.xml" value="0.2760416666666667" />
         <entry key="..\:/Users/Marcelo/AndroidStudioProjects/BancoDigital/app/src/main/res/layout/toolbar_padrao.xml" value="0.25" />

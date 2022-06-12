@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.example.bancodigital.R;
 import com.example.bancodigital.adapter.UsuarioAdapter;
+import com.example.bancodigital.cobranca.CobrancaConfirmaActivity;
+import com.example.bancodigital.cobranca.CobrancaFormActivity;
 import com.example.bancodigital.helper.FirebaseHelper;
 import com.example.bancodigital.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransferirUsuarioActivity extends AppCompatActivity implements UsuarioAdapter.OnClickListener {
+public class SelecionarUsuarioActivity extends AppCompatActivity implements UsuarioAdapter.OnClickListener {
 
     private RecyclerView rvUsuarios;
     private UsuarioAdapter usuarioAdapter;
@@ -46,19 +48,24 @@ public class TransferirUsuarioActivity extends AppCompatActivity implements Usua
 
     private String pesquisa = "";
 
-    private double valorTransferencia;
+    private double valorTransferencia = 0;
+    private double valorCobranca = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transferir_usuario);
+        setContentView(R.layout.activity_selecionar_usuario);
 
         iniciaComponentes();
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            valorTransferencia = bundle.getDouble("valorTransferencia");
+            if (getIntent().hasExtra("valorTransferencia")) {
+                valorTransferencia = bundle.getDouble("valorTransferencia");
+            } else if (getIntent().hasExtra("valorCobranca")) {
+                valorCobranca = bundle.getDouble("valorCobranca");
+            }
             configToolbar();
 
             configCliques();
@@ -188,9 +195,7 @@ public class TransferirUsuarioActivity extends AppCompatActivity implements Usua
     }
 
     private void configCliques() {
-        ibClose.setOnClickListener(v -> {
-            limparPesquisa();
-        });
+        ibClose.setOnClickListener(v -> limparPesquisa());
     }
 
 
@@ -219,9 +224,20 @@ public class TransferirUsuarioActivity extends AppCompatActivity implements Usua
 
     @Override
     public void OnClick(Usuario usuario) {
-        Intent intent = new Intent(this, TransferenciaConfirmaActivity.class);
-        intent.putExtra("valorTransferencia", valorTransferencia);
-        intent.putExtra("usuarioSelecionado", usuario);
-        startActivity(intent);
+        Intent intent = null;
+
+        if (valorTransferencia != 0 && valorCobranca == 0) {
+            intent = new Intent(this, TransferenciaConfirmaActivity.class);
+            intent.putExtra("valorTransferencia", valorTransferencia);
+
+        } else if (valorTransferencia == 0 && valorCobranca != 0) {
+            intent = new Intent(this, CobrancaConfirmaActivity.class);
+            intent.putExtra("valorCobranca", valorCobranca);
+        }
+        if (intent != null) {
+            intent.putExtra("usuarioSelecionado", usuario);
+            startActivity(intent);
+        }
+
     }
 }

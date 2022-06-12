@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -15,12 +16,15 @@ import com.example.bancodigital.R;
 import com.example.bancodigital.helper.FirebaseHelper;
 import com.example.bancodigital.model.Usuario;
 import com.google.firebase.database.DatabaseReference;
+import com.santalu.maskara.widget.MaskEditText;
+
+import java.util.Objects;
 
 public class CadastroActivity extends AppCompatActivity {
 
     private EditText edit_nome;
     private EditText edit_email;
-    private EditText edit_telefone;
+    private MaskEditText edit_telefone;
     private EditText edit_senha;
     private EditText edit_confirmar_senha;
     private Button btn_criar_conta;
@@ -38,17 +42,18 @@ public class CadastroActivity extends AppCompatActivity {
     private void validaDados() {
         String nome = edit_nome.getText().toString().trim();
         String email = edit_email.getText().toString().trim();
-        String telefone = edit_telefone.getText().toString().trim();
+        String telefone = Objects.requireNonNull(edit_telefone.getText()).toString();
         String senha = edit_senha.getText().toString().trim();
         String confirma_senha = edit_confirmar_senha.getText().toString().trim();
 
         if (!nome.isEmpty()) {
             if (!email.isEmpty()) {
-                if (!telefone.isEmpty()) {
+                if (telefone.replace("_","").trim().length() == 15) {
                     if (!senha.isEmpty()) {
                         if (!confirma_senha.isEmpty()) {
                             if (senha.equals(confirma_senha)) {
                                 progressBar.setVisibility(View.VISIBLE);
+                                ocultarTeclado();
                                 Usuario usuario = new Usuario();
                                 usuario.setNome(nome);
                                 usuario.setEmail(email);
@@ -91,7 +96,7 @@ public class CadastroActivity extends AppCompatActivity {
         ).addOnCompleteListener(task -> {
            if (task.isSuccessful()){
 
-                String id = task.getResult().getUser().getUid();
+                String id = Objects.requireNonNull(task.getResult().getUser()).getUid();
                 usuario.setId(id);
 
                 salvarDadosUsuario(usuario);
@@ -120,6 +125,11 @@ public class CadastroActivity extends AppCompatActivity {
                 Toast.makeText(this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void ocultarTeclado() {
+        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                edit_nome.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS
+        );
     }
 
     private void configCliques() {

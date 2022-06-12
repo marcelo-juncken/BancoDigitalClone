@@ -48,7 +48,7 @@ public class TransferenciaFormActivity extends AppCompatActivity {
         if (valorTransferencia > 0) {
             if (usuario.getSaldo() - valorTransferencia >= 0) {
                 ocultarTeclado();
-                Intent intent = new Intent(this,TransferirUsuarioActivity.class);
+                Intent intent = new Intent(this, SelecionarUsuarioActivity.class);
                 intent.putExtra("valorTransferencia", valorTransferencia);
                 startActivity(intent);
             } else{
@@ -93,8 +93,6 @@ public class TransferenciaFormActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         usuario = snapshot.getValue(Usuario.class);
-                    } else {
-
                     }
                 }
 

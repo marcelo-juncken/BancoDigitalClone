@@ -2,7 +2,6 @@ package com.example.bancodigital.app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,16 +17,20 @@ import android.widget.Toast;
 import com.example.bancodigital.R;
 import com.example.bancodigital.adapter.ExtratoAdapter;
 import com.example.bancodigital.autenticacao.LoginActivity;
+import com.example.bancodigital.cobranca.CobrancaFormActivity;
+import com.example.bancodigital.cobranca.CobrancaReciboActivity;
 import com.example.bancodigital.deposito.DepositoFormActivity;
+import com.example.bancodigital.deposito.DepositoReciboActivity;
 import com.example.bancodigital.extrato.ExtratoActivity;
 import com.example.bancodigital.helper.FirebaseHelper;
 import com.example.bancodigital.helper.GetMask;
 import com.example.bancodigital.model.Extrato;
-import com.example.bancodigital.model.Notificacao;
 import com.example.bancodigital.model.Usuario;
 import com.example.bancodigital.notificacoes.NotificacoesActivity;
 import com.example.bancodigital.recarga.RecargaFormActivity;
+import com.example.bancodigital.recarga.RecargaReciboActivity;
 import com.example.bancodigital.transferencia.TransferenciaFormActivity;
+import com.example.bancodigital.transferencia.TransferenciaReciboActivity;
 import com.example.bancodigital.usuario.MinhaContaActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +42,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ExtratoAdapter.OnClickListener {
 
     private RecyclerView rvExtrato;
     private ExtratoAdapter extratoAdapter;
@@ -85,9 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     textNotification.setText(String.valueOf(snapshot.getChildrenCount()));
                     textNotification.setVisibility(View.VISIBLE);
-                    textInfo.setText("");
                 } else {
-                    textInfo.setText("Não há notificações");
                     textNotification.setVisibility(View.GONE);
                 }
             }
@@ -110,8 +111,6 @@ public class MainActivity extends AppCompatActivity {
                     if (snapshot.exists()) {
                         usuario = snapshot.getValue(Usuario.class);
                         configDados();
-                    } else {
-
                     }
                 }
 
@@ -119,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError error) {
                 }
             });
-        } else {
         }
     }
 
@@ -141,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     textInfo.setText("");
                 } else {
-                    textInfo.setText("Erro ao carregar os dados");
+                    textInfo.setText("Não houve nenhuma movimentação.");
                 }
                 progressBar.setVisibility(View.GONE);
                 extratoAdapter.notifyDataSetChanged();
@@ -149,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                textInfo.setText("Erro ao carregar os dados");
             }
         });
     }
@@ -157,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     private void configRV() {
         rvExtrato.setLayoutManager(new LinearLayoutManager(this));
         rvExtrato.setHasFixedSize(true);
-        extratoAdapter = new ExtratoAdapter(extratoList, getBaseContext());
+        extratoAdapter = new ExtratoAdapter(extratoList, this, getBaseContext());
         rvExtrato.setAdapter(extratoAdapter);
     }
 
@@ -196,15 +194,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configCliques() {
-        imgUser.setOnClickListener(v -> {
-            if (usuario != null) {
-                Intent intent = new Intent(this, MinhaContaActivity.class);
-                intent.putExtra("usuario", usuario);
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "Suas informações ainda não foram carregadas. Aguarde.", Toast.LENGTH_SHORT).show();
-            }
-        });
+
+        imgUser.setOnClickListener(v -> perfilUsuario());
+
+        findViewById(R.id.ibNotification).setOnClickListener(v -> comecaActivity(NotificacoesActivity.class));
 
         findViewById(R.id.textVerTodas).setOnClickListener(v -> comecaActivity(ExtratoActivity.class));
 
@@ -216,7 +209,9 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.cardExtrato).setOnClickListener(v -> comecaActivity(ExtratoActivity.class));
 
-        findViewById(R.id.ibNotification).setOnClickListener(v -> comecaActivity(NotificacoesActivity.class));
+        findViewById(R.id.cardReceber).setOnClickListener(v -> comecaActivity(CobrancaFormActivity.class));
+
+        findViewById(R.id.cardMinhaConta).setOnClickListener(v -> perfilUsuario());
 
         findViewById(R.id.cardDeslogar).setOnClickListener(v -> {
 
@@ -226,6 +221,16 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+    }
+
+    private void perfilUsuario() {
+        if (usuario != null) {
+            Intent intent = new Intent(this, MinhaContaActivity.class);
+            intent.putExtra("usuario", usuario);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Suas informações ainda não foram carregadas. Aguarde.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void comecaActivity(Class<?> classe) {
@@ -249,5 +254,33 @@ public class MainActivity extends AppCompatActivity {
 
         rvExtrato = findViewById(R.id.rvExtrato);
 
+    }
+
+    @Override
+    public void onClick(Extrato extrato) {
+        Intent intent = null;
+        switch (extrato.getOperacao()) {
+            case "TRANSFERENCIA": {
+                intent = new Intent(this, TransferenciaReciboActivity.class);
+                intent.putExtra("idTransferencia", extrato.getId());
+                break;
+            }
+            case "DEPOSITO": {
+                intent = new Intent(this, DepositoReciboActivity.class);
+                intent.putExtra("idDeposito", extrato.getId());
+                break;
+            }
+            case "RECARGA": {
+                intent = new Intent(this, RecargaReciboActivity.class);
+                intent.putExtra("idRecarga", extrato.getId());
+                break;
+            }
+            case "PAGAMENTO": {
+                intent = new Intent(this, CobrancaReciboActivity.class);
+                intent.putExtra("idPagamento", extrato.getId());
+                break;
+            }
+        }
+        startActivity(intent);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.bancodigital.transferencia;
+package com.example.bancodigital.cobranca;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,15 +11,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bancodigital.R;
 import com.example.bancodigital.app.MainActivity;
 import com.example.bancodigital.helper.FirebaseHelper;
 import com.example.bancodigital.helper.GetMask;
-import com.example.bancodigital.model.Extrato;
+import com.example.bancodigital.model.Cobranca;
 import com.example.bancodigital.model.Notificacao;
-import com.example.bancodigital.model.Transferencia;
 import com.example.bancodigital.model.Usuario;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,32 +28,28 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class TransferenciaConfirmaActivity extends AppCompatActivity {
+public class CobrancaConfirmaActivity extends AppCompatActivity {
 
-    private static final int REQUEST_TRANSFERENCIA = 150;
     private ImageView imgUser;
     private TextView textUser, textValor;
     private Button btnConfirmar;
 
     private Usuario usuarioOrigem;
     private Usuario usuarioDestino;
-    private double valorTransferencia;
+    private double valorCobranca;
 
     private AlertDialog dialog;
 
-    private final Transferencia transferencia = new Transferencia();
-
-    private String transferenciaOrigem;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transferencia_confirma);
+        setContentView(R.layout.activity_cobranca_confirma);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            valorTransferencia = (double) bundle.getSerializable("valorTransferencia");
+            valorCobranca = (double) bundle.getSerializable("valorCobranca");
             usuarioDestino = (Usuario) bundle.getSerializable("usuarioSelecionado");
         }
         configToolbar();
@@ -62,9 +59,10 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
         recuperaUsuario();
     }
 
-    private void enviaNotificacao(String idOperacao){
+
+    private void enviaNotificacao(String idOperacao) {
         Notificacao notificacao = new Notificacao();
-        notificacao.setOperacao("TRANSFERENCIA");
+        notificacao.setOperacao("COBRANCA");
         notificacao.setIdDestinatario(usuarioDestino.getId());
         notificacao.setIdRemetente(usuarioOrigem.getId());
         notificacao.setIdOperacao(idOperacao);
@@ -100,72 +98,37 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
     }
 
     private void salvaInformacoes() {
-        if (usuarioOrigem.getSaldo() >= valorTransferencia) {
+        if (FirebaseHelper.getAutenticado()) {
             btnConfirmar.setEnabled(false);
 
-            transferencia.setIdUserOrigem(usuarioOrigem.getId());
-            transferencia.setIdUserDestino(usuarioDestino.getId());
-            transferencia.setValor(valorTransferencia);
+            Cobranca cobranca = new Cobranca();
+            cobranca.setIdRemetente(usuarioOrigem.getId());
+            cobranca.setIdDestinatario(usuarioDestino.getId());
+            cobranca.setValor(valorCobranca);
 
-            salvarExtrato(usuarioOrigem, "SAIDA");
-            salvarExtrato(usuarioDestino, "ENTRADA");
+            salvarCobranca(cobranca);
         } else {
-            showDialog("Atenção", "Não há saldo suficiente.");
+            showDialog("Atenção", "Falha na autenticação");
         }
     }
 
-    private void salvarExtrato(Usuario usuario, String tipo) {
-        Extrato extrato = new Extrato();
-        extrato.setValor(valorTransferencia);
-        extrato.setOperacao("TRANSFERENCIA");
-        extrato.setTipo(tipo);
 
-        DatabaseReference extratoRef = FirebaseHelper.getDatabaseReference()
-                .child("extratos")
-                .child(usuario.getId())
-                .child(extrato.getId());
-        extratoRef.setValue(extrato).addOnCompleteListener(task -> {
+    private void salvarCobranca(Cobranca cobranca) {
+        DatabaseReference cobrancaRef = FirebaseHelper.getDatabaseReference()
+                .child("cobrancas")
+                .child(cobranca.getIdDestinatario())
+                .child(cobranca.getId());
+
+        cobrancaRef.setValue(cobranca).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                cobrancaRef.child("data").setValue(ServerValue.TIMESTAMP);
 
-                extratoRef.child("data").setValue(ServerValue.TIMESTAMP);
+                enviaNotificacao(cobranca.getId());
 
-                if (tipo.equals("SAIDA")) transferenciaOrigem = extrato.getId();
-
-                salvarTransferencia(extrato);
-
-            } else {
-                showDialog("Atenção", "Erro ao salvar o extrato, contate um administrador.");
-                btnConfirmar.setEnabled(true);
-            }
-        });
-
-
-    }
-
-    private void salvarTransferencia(Extrato extrato) {
-        transferencia.setId(extrato.getId());
-
-        DatabaseReference transferenciaRef = FirebaseHelper.getDatabaseReference()
-                .child("transferencias")
-                .child(extrato.getId());
-
-        transferenciaRef.setValue(transferencia).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                transferenciaRef.child("data").setValue(ServerValue.TIMESTAMP);
-
-                if (extrato.getTipo().equals("SAIDA")) {
-                    usuarioOrigem.setSaldo(usuarioOrigem.getSaldo() - valorTransferencia);
-                    usuarioOrigem.atualizarSaldo();
-                } else if (extrato.getTipo().equals("ENTRADA")) {
-                    usuarioDestino.setSaldo(usuarioDestino.getSaldo() + valorTransferencia);
-                    usuarioDestino.atualizarSaldo();
-
-                    enviaNotificacao(extrato.getId());
-
-                    Intent intent = new Intent(this, TransferenciaReciboActivity.class);
-                    intent.putExtra("idTransferencia", transferenciaOrigem);
-                    startActivityForResult(intent, REQUEST_TRANSFERENCIA);
-                }
+                Snackbar.make(textUser,"Cobrança enviada com sucesso!", Snackbar.LENGTH_LONG).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
 
             } else {
                 showDialog("Atenção", "Erro ao salvar a transferência, contate um administrador");
@@ -199,7 +162,7 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
 
     private void configDados() {
         textUser.setText(usuarioDestino.getNome());
-        textValor.setText(getString(R.string.valor, GetMask.getValor(valorTransferencia)));
+        textValor.setText(getString(R.string.valor, GetMask.getValor(valorCobranca)));
         if (usuarioDestino.getUrlImagem() != null) {
             Picasso.get().load(usuarioDestino.getUrlImagem())
                     .placeholder(R.drawable.loading)
@@ -230,16 +193,4 @@ public class TransferenciaConfirmaActivity extends AppCompatActivity {
         btnConfirmar = findViewById(R.id.btnConfirmar);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_TRANSFERENCIA) {
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        }
-
-    }
 }

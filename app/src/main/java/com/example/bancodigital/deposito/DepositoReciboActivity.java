@@ -47,12 +47,14 @@ public class DepositoReciboActivity extends AppCompatActivity {
             DatabaseReference depositoRef = FirebaseHelper.getDatabaseReference()
                     .child("depositos")
                     .child(idDeposito);
-            depositoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            depositoRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()){
                         Deposito deposito = snapshot.getValue(Deposito.class);
-                        config(deposito);
+                        if (deposito != null) {
+                            config(deposito);
+                        }
                     } else {
                         progressBar.setVisibility(View.GONE);
                     }

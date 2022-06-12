@@ -65,7 +65,7 @@ public class MinhaContaActivity extends AppCompatActivity {
         if (bundle != null) {
             usuario = (Usuario) bundle.getSerializable("usuario");
             editNome.setText(usuario.getNome());
-            editTelefone.setText(usuario.getTelefone());
+            editTelefone.setText(usuario.getTelefone().trim());
             editEmail.setText(usuario.getEmail());
             if (usuario.getUrlImagem() != null) {
                 Picasso.get()
@@ -92,10 +92,10 @@ public class MinhaContaActivity extends AppCompatActivity {
 
     private void validaDados() {
         String nome = editNome.getText().toString().trim();
-        String telefone = editTelefone.getMasked();
+        String telefone = editTelefone.getText().toString();
 
         if (!nome.isEmpty()) {
-            if (editTelefone.isDone()) {
+            if (telefone.replace("_","").trim().length() == 15) {
                 btnSalvar.setEnabled(false);
                 progressBar.setVisibility(View.VISIBLE);
                 ocultarTeclado();
