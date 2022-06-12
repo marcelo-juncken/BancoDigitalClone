@@ -4,12 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -101,13 +99,13 @@ public class NotificacoesActivity extends AppCompatActivity implements Notificac
 
             @Override
             public void onSwipedRight(int position) {
-                showDialog("Deseja remover esta notificação?", "Aperte em sim para confirmar a\nremoção da notificação.", position);
+                showDialog("Aperte em sim para confirmar a\nremoção da notificação.", position);
 
             }
         });
     }
 
-    private void showDialog(String titulo, String mensagem, int position) {
+    private void showDialog(String mensagem, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 this, R.style.CustomAlertDialog
         );
@@ -116,7 +114,7 @@ public class NotificacoesActivity extends AppCompatActivity implements Notificac
         builder.setView(view);
 
         TextView textTitulo = view.findViewById(R.id.textTitulo);
-        textTitulo.setText(titulo);
+        textTitulo.setText("Deseja remover esta notificação?");
 
         TextView textMensagem = view.findViewById(R.id.textMensagem);
         textMensagem.setText(mensagem);
